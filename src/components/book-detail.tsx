@@ -6,8 +6,14 @@ import { BookCover } from "./book-cover";
 import { EmptyState, StatusBadge } from "./status-badge";
 import { Button } from "@/components/ui/button";
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
-  AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { availableCopies, canReserve } from "@/lib/rules";
 import { reserveBook, useCurrentUser, useDb } from "@/services/library";
@@ -21,31 +27,59 @@ export function BookDetail({ id, inPanel }: { id: string; inPanel?: boolean }) {
 
   if (!book)
     return (
-      <EmptyState icon={Info} title="Livro não encontrado" description="O título pode ter sido removido do acervo demonstrativo." action={<Button asChild variant="outline"><Link to={back}>Voltar ao acervo</Link></Button>} />
+      <EmptyState
+        icon={Info}
+        title="Livro não encontrado"
+        description="O título pode ter sido removido do acervo demonstrativo."
+        action={
+          <Button asChild variant="outline">
+            <Link to={back}>Voltar ao acervo</Link>
+          </Button>
+        }
+      />
     );
 
   const autor = db.authors.find((a) => a.id === book.autorId)?.nome ?? "—";
   const avail = availableCopies(db, book);
-  const myRes = user && db.reservations.find((r) => r.livroId === book.id && r.usuarioId === user.id && (r.status === "PENDENTE" || r.status === "DISPONIVEL"));
-  const myLoan = user && db.loans.find((l) => l.livroId === book.id && l.usuarioId === user.id && !l.dataDevolucao);
-  const fila = db.reservations.filter((r) => r.livroId === book.id && r.status === "PENDENTE").length;
+  const myRes =
+    user &&
+    db.reservations.find(
+      (r) =>
+        r.livroId === book.id &&
+        r.usuarioId === user.id &&
+        (r.status === "PENDENTE" || r.status === "DISPONIVEL"),
+    );
+  const myLoan =
+    user &&
+    db.loans.find((l) => l.livroId === book.id && l.usuarioId === user.id && !l.dataDevolucao);
+  const fila = db.reservations.filter(
+    (r) => r.livroId === book.id && r.status === "PENDENTE",
+  ).length;
   const check = user ? canReserve(db, user.id, book) : null;
 
   const doReserve = () => {
     if (!user) return;
     const r = reserveBook(user.id, book.id);
-    r.ok ? toast.success(r.message) : toast.error(r.message);
+    if (r.ok) toast.success(r.message);
+    else toast.error(r.message);
     setConfirm(false);
   };
 
   const info: [string, string][] = [
-    ["Autor", autor], ["Editora", book.editora], ["Ano", String(book.ano)],
-    ["ISBN", book.isbn ?? "Não informado"], ["Categoria", book.categoria], ["Exemplares", `${book.exemplares} no acervo`],
+    ["Autor", autor],
+    ["Editora", book.editora],
+    ["Ano", String(book.ano)],
+    ["ISBN", book.isbn ?? "Não informado"],
+    ["Categoria", book.categoria],
+    ["Exemplares", `${book.exemplares} no acervo`],
   ];
 
   return (
     <div>
-      <Link to={back} className="mb-6 inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground">
+      <Link
+        to={back}
+        className="mb-6 inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground"
+      >
         <ArrowLeft className="h-4 w-4" /> Voltar ao acervo
       </Link>
       <div className="grid gap-8 md:grid-cols-[260px_1fr]">
@@ -67,29 +101,52 @@ export function BookDetail({ id, inPanel }: { id: string; inPanel?: boolean }) {
 
           <div className="mt-6 max-w-2xl rounded-xl border bg-card p-5">
             <div className="flex flex-wrap items-center gap-3">
-              {avail > 0 ? <StatusBadge tone="success">Disponível · {avail} exemplar(es)</StatusBadge> : <StatusBadge tone="danger">Emprestado</StatusBadge>}
+              {avail > 0 ? (
+                <StatusBadge tone="success">Disponível · {avail} exemplar(es)</StatusBadge>
+              ) : (
+                <StatusBadge tone="danger">Emprestado</StatusBadge>
+              )}
               {fila > 0 && <StatusBadge tone="warning">{fila} reserva(s) na fila</StatusBadge>}
-              <span className="inline-flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="h-4 w-4" /> {book.localizacao} (ilustrativa)</span>
+              <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4" /> {book.localizacao} (ilustrativa)
+              </span>
             </div>
 
             <div className="mt-4">
               {myLoan ? (
-                <p className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-success" /> Você está com este livro.</p>
+                <p className="flex items-center gap-2 text-sm">
+                  <CheckCircle2 className="h-4 w-4 text-success" /> Você está com este livro.
+                </p>
               ) : myRes ? (
                 <div className="flex flex-wrap items-center gap-3">
                   <StatusBadge tone={myRes.status === "DISPONIVEL" ? "success" : "info"}>
-                    {myRes.status === "DISPONIVEL" ? "Reserva disponível para retirada" : "Reserva pendente"}
+                    {myRes.status === "DISPONIVEL"
+                      ? "Reserva disponível para retirada"
+                      : "Reserva pendente"}
                   </StatusBadge>
-                  <Button asChild variant="outline" size="sm"><Link to="/painel/reservas">Ver minhas reservas</Link></Button>
+                  <Button asChild variant="outline" size="sm">
+                    <Link to="/painel/reservas">Ver minhas reservas</Link>
+                  </Button>
                 </div>
               ) : avail > 0 ? (
-                <p className="text-sm text-muted-foreground">Exemplar disponível para retirada imediata no balcão da biblioteca. A reserva fica habilitada quando todos os exemplares estão emprestados.</p>
+                <p className="text-sm text-muted-foreground">
+                  Exemplar disponível para retirada imediata no balcão da biblioteca. A reserva fica
+                  habilitada quando todos os exemplares estão emprestados.
+                </p>
               ) : !user ? (
-                <Button asChild><Link to="/login"><BookmarkPlus /> Entrar para reservar</Link></Button>
+                <Button asChild>
+                  <Link to="/login">
+                    <BookmarkPlus /> Entrar para reservar
+                  </Link>
+                </Button>
               ) : user.role === "ADMIN" ? (
-                <p className="text-sm text-muted-foreground">Reservas são feitas pelo perfil de estudante.</p>
+                <p className="text-sm text-muted-foreground">
+                  Reservas são feitas pelo perfil de estudante.
+                </p>
               ) : (
-                <Button onClick={() => setConfirm(true)} disabled={!check?.ok}><BookmarkPlus /> Reservar livro</Button>
+                <Button onClick={() => setConfirm(true)} disabled={!check?.ok}>
+                  <BookmarkPlus /> Reservar livro
+                </Button>
               )}
             </div>
           </div>
@@ -101,7 +158,9 @@ export function BookDetail({ id, inPanel }: { id: string; inPanel?: boolean }) {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar reserva</AlertDialogTitle>
             <AlertDialogDescription>
-              Reservar <strong>{book.titulo}</strong> em nome de {user?.nome} (matrícula {user?.matricula}). Você entrará na fila e será avisado quando um exemplar for devolvido.
+              Reservar <strong>{book.titulo}</strong> em nome de {user?.nome} (matrícula{" "}
+              {user?.matricula}). Você entrará na fila e será avisado quando um exemplar for
+              devolvido.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

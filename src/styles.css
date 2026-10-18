@@ -124,7 +124,8 @@
   --cover-5: oklch(0.5 0.15 25);
   --cover-6: oklch(0.35 0.05 255);
   --cover-7: oklch(0.6 0.12 200);
-  --shadow-card: 0 1px 2px oklch(0.26 0.06 255 / 0.05), 0 8px 24px -12px oklch(0.26 0.06 255 / 0.12);
+  --shadow-card:
+    0 1px 2px oklch(0.26 0.06 255 / 0.05), 0 8px 24px -12px oklch(0.26 0.06 255 / 0.12);
   --shadow-lift: 0 18px 40px -18px oklch(0.26 0.06 255 / 0.3);
 }
 
@@ -137,7 +138,10 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }

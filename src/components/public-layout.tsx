@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useCurrentUser } from "@/services/library";
 
-const nav = [
-  { to: "/", label: "Início", hash: undefined },
-  { to: "/catalogo", label: "Acervo", hash: undefined },
+type PublicNavItem = { to: "/" | "/catalogo"; label: string; hash?: "servicos" | "destaques" };
+
+const nav: PublicNavItem[] = [
+  { to: "/", label: "Início" },
+  { to: "/catalogo", label: "Acervo" },
   { to: "/", label: "Serviços", hash: "servicos" },
   { to: "/", label: "Destaques", hash: "destaques" },
-] as const;
+];
 
 export function PublicHeader() {
   const user = useCurrentUser();
@@ -26,7 +28,7 @@ export function PublicHeader() {
             <Link
               key={n.label}
               to={n.to}
-              hash={n.hash}
+              {...(n.hash ? { hash: n.hash } : {})}
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               activeOptions={{ exact: true, includeHash: true }}
               activeProps={{ className: "text-foreground" }}
@@ -65,7 +67,13 @@ export function PublicHeader() {
             <SheetTitle className="sr-only">Menu</SheetTitle>
             <div className="mt-8 flex flex-col gap-1">
               {nav.map((n) => (
-                <Link key={n.label} to={n.to} hash={n.hash} onClick={() => setOpen(false)} className="rounded-md px-3 py-3 font-medium hover:bg-muted">
+                <Link
+                  key={n.label}
+                  to={n.to}
+                  {...(n.hash ? { hash: n.hash } : {})}
+                  onClick={() => setOpen(false)}
+                  className="rounded-md px-3 py-3 font-medium hover:bg-muted"
+                >
                   {n.label}
                 </Link>
               ))}
@@ -76,7 +84,9 @@ export function PublicHeader() {
                   </Link>
                 </Button>
                 <Button asChild>
-                  <Link to="/catalogo" onClick={() => setOpen(false)}>Consultar acervo</Link>
+                  <Link to="/catalogo" onClick={() => setOpen(false)}>
+                    Consultar acervo
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -94,28 +104,64 @@ export function PublicFooter() {
         <div>
           <Brand inverted />
           <p className="mt-4 max-w-xs text-sm text-ink-muted">
-            Portal digital da biblioteca para a comunidade acadêmica do Centro Universitário Fametro — UNIFAMETRO.
+            Portal digital da biblioteca para a comunidade acadêmica do Centro Universitário Fametro
+            — UNIFAMETRO.
           </p>
         </div>
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-muted">Navegação</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-muted">
+            Navegação
+          </h2>
           <ul className="mt-3 space-y-2 text-sm">
-            <li><Link to="/catalogo" className="hover:text-primary">Consultar acervo</Link></li>
-            <li><Link to="/login" className="hover:text-primary">Entrar no portal</Link></li>
-            <li><Link to="/" hash="servicos" className="hover:text-primary">Serviços</Link></li>
+            <li>
+              <Link to="/catalogo" className="hover:text-primary">
+                Consultar acervo
+              </Link>
+            </li>
+            <li>
+              <Link to="/login" className="hover:text-primary">
+                Entrar no portal
+              </Link>
+            </li>
+            <li>
+              <Link to="/" hash="servicos" className="hover:text-primary">
+                Serviços
+              </Link>
+            </li>
           </ul>
         </div>
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-muted">Institucional</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-muted">
+            Institucional
+          </h2>
           <ul className="mt-3 space-y-2 text-sm">
-            <li><a href="https://unifametro.edu.br/" target="_blank" rel="noreferrer" className="hover:text-primary">Site oficial UNIFAMETRO</a></li>
-            <li><a href="https://unifametro.edu.br/biblioteca-unifametro/" target="_blank" rel="noreferrer" className="hover:text-primary">Biblioteca UNIFAMETRO</a></li>
+            <li>
+              <a
+                href="https://unifametro.edu.br/"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-primary"
+              >
+                Site oficial UNIFAMETRO
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://unifametro.edu.br/biblioteca-unifametro/"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-primary"
+              >
+                Biblioteca UNIFAMETRO
+              </a>
+            </li>
           </ul>
         </div>
       </div>
       <div className="border-t border-sidebar-border">
         <p className="mx-auto max-w-7xl px-4 py-5 text-xs text-ink-muted sm:px-6">
-          Protótipo acadêmico — Conexão Unifametro 2026. Dados fictícios, sem integração com os sistemas oficiais da instituição.
+          Protótipo acadêmico — Conexão Unifametro 2026. Dados fictícios, sem integração com os
+          sistemas oficiais da instituição.
         </p>
       </div>
     </footer>

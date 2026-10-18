@@ -6,7 +6,10 @@ export const Route = createFileRoute("/livro/$id")({
   head: () => ({
     meta: [
       { title: "Detalhes do livro — BiblioConnect" },
-      { name: "description", content: "Informações bibliográficas, disponibilidade e reserva do título." },
+      {
+        name: "description",
+        content: "Informações bibliográficas, disponibilidade e reserva do título.",
+      },
       { property: "og:title", content: "Detalhes do livro — BiblioConnect" },
       { property: "og:description", content: "Disponibilidade e reserva no acervo demonstrativo." },
       { property: "og:type", content: "article" },

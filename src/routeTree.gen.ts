@@ -10,14 +10,36 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PainelRouteImport } from './routes/painel'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminAutoresRouteImport } from './routes/admin/autores'
+import { Route as AdminEmprestimosRouteImport } from './routes/admin/emprestimos'
+import { Route as AdminEspacosRouteImport } from './routes/admin/espacos'
+import { Route as AdminLivrosRouteImport } from './routes/admin/livros'
+import { Route as AdminReservasRouteImport } from './routes/admin/reservas'
+import { Route as AdminUsuariosRouteImport } from './routes/admin/usuarios'
 import { Route as LivroIdRouteImport } from './routes/livro.$id'
+import { Route as PainelIndexRouteImport } from './routes/painel/index'
+import { Route as PainelCatalogoRouteImport } from './routes/painel/catalogo'
+import { Route as PainelEmprestimosRouteImport } from './routes/painel/emprestimos'
+import { Route as PainelEspacosRouteImport } from './routes/painel/espacos'
+import { Route as PainelPerfilRouteImport } from './routes/painel/perfil'
+import { Route as PainelRecursosRouteImport } from './routes/painel/recursos'
+import { Route as PainelReservasRouteImport } from './routes/painel/reservas'
+import { Route as PainelLivroIdRouteImport } from './routes/painel/livro.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CatalogoRoute = CatalogoRouteImport.update({
@@ -30,57 +52,247 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PainelRoute = PainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   id: '/recuperar-senha',
   path: '/recuperar-senha',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAutoresRoute = AdminAutoresRouteImport.update({
+  id: '/autores',
+  path: '/autores',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEmprestimosRoute = AdminEmprestimosRouteImport.update({
+  id: '/emprestimos',
+  path: '/emprestimos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEspacosRoute = AdminEspacosRouteImport.update({
+  id: '/espacos',
+  path: '/espacos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLivrosRoute = AdminLivrosRouteImport.update({
+  id: '/livros',
+  path: '/livros',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReservasRoute = AdminReservasRouteImport.update({
+  id: '/reservas',
+  path: '/reservas',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AdminRoute,
 } as any)
 const LivroIdRoute = LivroIdRouteImport.update({
   id: '/livro/$id',
   path: '/livro/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PainelIndexRoute = PainelIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelCatalogoRoute = PainelCatalogoRouteImport.update({
+  id: '/catalogo',
+  path: '/catalogo',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelEmprestimosRoute = PainelEmprestimosRouteImport.update({
+  id: '/emprestimos',
+  path: '/emprestimos',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelEspacosRoute = PainelEspacosRouteImport.update({
+  id: '/espacos',
+  path: '/espacos',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelPerfilRoute = PainelPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelRecursosRoute = PainelRecursosRouteImport.update({
+  id: '/recursos',
+  path: '/recursos',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelReservasRoute = PainelReservasRouteImport.update({
+  id: '/reservas',
+  path: '/reservas',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelLivroIdRoute = PainelLivroIdRouteImport.update({
+  id: '/livro/$id',
+  path: '/livro/$id',
+  getParentRoute: () => PainelRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/catalogo': typeof CatalogoRoute
   '/login': typeof LoginRoute
+  '/painel': typeof PainelRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/admin/autores': typeof AdminAutoresRoute
+  '/admin/emprestimos': typeof AdminEmprestimosRoute
+  '/admin/espacos': typeof AdminEspacosRoute
+  '/admin/livros': typeof AdminLivrosRoute
+  '/admin/reservas': typeof AdminReservasRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
   '/livro/$id': typeof LivroIdRoute
+  '/painel/catalogo': typeof PainelCatalogoRoute
+  '/painel/emprestimos': typeof PainelEmprestimosRoute
+  '/painel/espacos': typeof PainelEspacosRoute
+  '/painel/perfil': typeof PainelPerfilRoute
+  '/painel/recursos': typeof PainelRecursosRoute
+  '/painel/reservas': typeof PainelReservasRoute
+  '/admin/': typeof AdminIndexRoute
+  '/painel/': typeof PainelIndexRoute
+  '/painel/livro/$id': typeof PainelLivroIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/catalogo': typeof CatalogoRoute
   '/login': typeof LoginRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/admin/autores': typeof AdminAutoresRoute
+  '/admin/emprestimos': typeof AdminEmprestimosRoute
+  '/admin/espacos': typeof AdminEspacosRoute
+  '/admin/livros': typeof AdminLivrosRoute
+  '/admin/reservas': typeof AdminReservasRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
   '/livro/$id': typeof LivroIdRoute
+  '/painel/catalogo': typeof PainelCatalogoRoute
+  '/painel/emprestimos': typeof PainelEmprestimosRoute
+  '/painel/espacos': typeof PainelEspacosRoute
+  '/painel/perfil': typeof PainelPerfilRoute
+  '/painel/recursos': typeof PainelRecursosRoute
+  '/painel/reservas': typeof PainelReservasRoute
+  '/admin': typeof AdminIndexRoute
+  '/painel': typeof PainelIndexRoute
+  '/painel/livro/$id': typeof PainelLivroIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/catalogo': typeof CatalogoRoute
   '/login': typeof LoginRoute
+  '/painel': typeof PainelRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/admin/autores': typeof AdminAutoresRoute
+  '/admin/emprestimos': typeof AdminEmprestimosRoute
+  '/admin/espacos': typeof AdminEspacosRoute
+  '/admin/livros': typeof AdminLivrosRoute
+  '/admin/reservas': typeof AdminReservasRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
   '/livro/$id': typeof LivroIdRoute
+  '/painel/catalogo': typeof PainelCatalogoRoute
+  '/painel/emprestimos': typeof PainelEmprestimosRoute
+  '/painel/espacos': typeof PainelEspacosRoute
+  '/painel/perfil': typeof PainelPerfilRoute
+  '/painel/recursos': typeof PainelRecursosRoute
+  '/painel/reservas': typeof PainelReservasRoute
+  '/admin/': typeof AdminIndexRoute
+  '/painel/': typeof PainelIndexRoute
+  '/painel/livro/$id': typeof PainelLivroIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/catalogo' | '/login' | '/recuperar-senha' | '/livro/$id'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/catalogo'
+    | '/login'
+    | '/painel'
+    | '/recuperar-senha'
+    | '/admin/autores'
+    | '/admin/emprestimos'
+    | '/admin/espacos'
+    | '/admin/livros'
+    | '/admin/reservas'
+    | '/admin/usuarios'
+    | '/livro/$id'
+    | '/painel/catalogo'
+    | '/painel/emprestimos'
+    | '/painel/espacos'
+    | '/painel/perfil'
+    | '/painel/recursos'
+    | '/painel/reservas'
+    | '/admin/'
+    | '/painel/'
+    | '/painel/livro/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/catalogo' | '/login' | '/recuperar-senha' | '/livro/$id'
-  id:
-    | '__root__'
+  to:
     | '/'
     | '/catalogo'
     | '/login'
     | '/recuperar-senha'
+    | '/admin/autores'
+    | '/admin/emprestimos'
+    | '/admin/espacos'
+    | '/admin/livros'
+    | '/admin/reservas'
+    | '/admin/usuarios'
     | '/livro/$id'
+    | '/painel/catalogo'
+    | '/painel/emprestimos'
+    | '/painel/espacos'
+    | '/painel/perfil'
+    | '/painel/recursos'
+    | '/painel/reservas'
+    | '/admin'
+    | '/painel'
+    | '/painel/livro/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/catalogo'
+    | '/login'
+    | '/painel'
+    | '/recuperar-senha'
+    | '/admin/autores'
+    | '/admin/emprestimos'
+    | '/admin/espacos'
+    | '/admin/livros'
+    | '/admin/reservas'
+    | '/admin/usuarios'
+    | '/livro/$id'
+    | '/painel/catalogo'
+    | '/painel/emprestimos'
+    | '/painel/espacos'
+    | '/painel/perfil'
+    | '/painel/recursos'
+    | '/painel/reservas'
+    | '/admin/'
+    | '/painel/'
+    | '/painel/livro/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   CatalogoRoute: typeof CatalogoRoute
   LoginRoute: typeof LoginRoute
+  PainelRoute: typeof PainelRouteWithChildren
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   LivroIdRoute: typeof LivroIdRoute
 }
@@ -92,6 +304,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/catalogo': {
@@ -108,12 +327,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/painel': {
+      id: '/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof PainelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/recuperar-senha': {
       id: '/recuperar-senha'
       path: '/recuperar-senha'
       fullPath: '/recuperar-senha'
       preLoaderRoute: typeof RecuperarSenhaRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/autores': {
+      id: '/admin/autores'
+      path: '/autores'
+      fullPath: '/admin/autores'
+      preLoaderRoute: typeof AdminAutoresRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/emprestimos': {
+      id: '/admin/emprestimos'
+      path: '/emprestimos'
+      fullPath: '/admin/emprestimos'
+      preLoaderRoute: typeof AdminEmprestimosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/espacos': {
+      id: '/admin/espacos'
+      path: '/espacos'
+      fullPath: '/admin/espacos'
+      preLoaderRoute: typeof AdminEspacosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/livros': {
+      id: '/admin/livros'
+      path: '/livros'
+      fullPath: '/admin/livros'
+      preLoaderRoute: typeof AdminLivrosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reservas': {
+      id: '/admin/reservas'
+      path: '/reservas'
+      fullPath: '/admin/reservas'
+      preLoaderRoute: typeof AdminReservasRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/usuarios': {
+      id: '/admin/usuarios'
+      path: '/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AdminUsuariosRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/livro/$id': {
       id: '/livro/$id'
@@ -122,13 +397,118 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LivroIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/painel/': {
+      id: '/painel/'
+      path: '/'
+      fullPath: '/painel/'
+      preLoaderRoute: typeof PainelIndexRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/catalogo': {
+      id: '/painel/catalogo'
+      path: '/catalogo'
+      fullPath: '/painel/catalogo'
+      preLoaderRoute: typeof PainelCatalogoRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/emprestimos': {
+      id: '/painel/emprestimos'
+      path: '/emprestimos'
+      fullPath: '/painel/emprestimos'
+      preLoaderRoute: typeof PainelEmprestimosRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/espacos': {
+      id: '/painel/espacos'
+      path: '/espacos'
+      fullPath: '/painel/espacos'
+      preLoaderRoute: typeof PainelEspacosRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/perfil': {
+      id: '/painel/perfil'
+      path: '/perfil'
+      fullPath: '/painel/perfil'
+      preLoaderRoute: typeof PainelPerfilRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/recursos': {
+      id: '/painel/recursos'
+      path: '/recursos'
+      fullPath: '/painel/recursos'
+      preLoaderRoute: typeof PainelRecursosRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/reservas': {
+      id: '/painel/reservas'
+      path: '/reservas'
+      fullPath: '/painel/reservas'
+      preLoaderRoute: typeof PainelReservasRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/livro/$id': {
+      id: '/painel/livro/$id'
+      path: '/livro/$id'
+      fullPath: '/painel/livro/$id'
+      preLoaderRoute: typeof PainelLivroIdRouteImport
+      parentRoute: typeof PainelRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminAutoresRoute: typeof AdminAutoresRoute
+  AdminEmprestimosRoute: typeof AdminEmprestimosRoute
+  AdminEspacosRoute: typeof AdminEspacosRoute
+  AdminLivrosRoute: typeof AdminLivrosRoute
+  AdminReservasRoute: typeof AdminReservasRoute
+  AdminUsuariosRoute: typeof AdminUsuariosRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAutoresRoute: AdminAutoresRoute,
+  AdminEmprestimosRoute: AdminEmprestimosRoute,
+  AdminEspacosRoute: AdminEspacosRoute,
+  AdminLivrosRoute: AdminLivrosRoute,
+  AdminReservasRoute: AdminReservasRoute,
+  AdminUsuariosRoute: AdminUsuariosRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface PainelRouteChildren {
+  PainelCatalogoRoute: typeof PainelCatalogoRoute
+  PainelEmprestimosRoute: typeof PainelEmprestimosRoute
+  PainelEspacosRoute: typeof PainelEspacosRoute
+  PainelPerfilRoute: typeof PainelPerfilRoute
+  PainelRecursosRoute: typeof PainelRecursosRoute
+  PainelReservasRoute: typeof PainelReservasRoute
+  PainelIndexRoute: typeof PainelIndexRoute
+  PainelLivroIdRoute: typeof PainelLivroIdRoute
+}
+
+const PainelRouteChildren: PainelRouteChildren = {
+  PainelCatalogoRoute: PainelCatalogoRoute,
+  PainelEmprestimosRoute: PainelEmprestimosRoute,
+  PainelEspacosRoute: PainelEspacosRoute,
+  PainelPerfilRoute: PainelPerfilRoute,
+  PainelRecursosRoute: PainelRecursosRoute,
+  PainelReservasRoute: PainelReservasRoute,
+  PainelIndexRoute: PainelIndexRoute,
+  PainelLivroIdRoute: PainelLivroIdRoute,
+}
+
+const PainelRouteWithChildren =
+  PainelRoute._addFileChildren(PainelRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   CatalogoRoute: CatalogoRoute,
   LoginRoute: LoginRoute,
+  PainelRoute: PainelRouteWithChildren,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   LivroIdRoute: LivroIdRoute,
 }

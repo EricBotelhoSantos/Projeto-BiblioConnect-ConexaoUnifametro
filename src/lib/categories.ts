@@ -1,4 +1,12 @@
-import { BookOpenText, Briefcase, Cpu, GraduationCap, HeartPulse, Landmark, Scale } from "lucide-react";
+import {
+  BookOpenText,
+  Briefcase,
+  Cpu,
+  GraduationCap,
+  HeartPulse,
+  Landmark,
+  Scale,
+} from "lucide-react";
 import type { Category } from "./types";
 
 export const CATEGORIES: { name: Category; icon: React.ElementType }[] = [

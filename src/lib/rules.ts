@@ -40,7 +40,10 @@ export const isOverdue = (loan: Loan, today: string) =>
 export function canRenew(db: Database, loan: Loan, today: string) {
   if (loan.dataDevolucao) return { ok: false, message: "Este empréstimo já foi encerrado." };
   if (isOverdue(loan, today))
-    return { ok: false, message: "Empréstimos em atraso não podem ser renovados. Procure o balcão." };
+    return {
+      ok: false,
+      message: "Empréstimos em atraso não podem ser renovados. Procure o balcão.",
+    };
   if (loan.renovacoes >= DEMO_RULES.maxRenovacoes)
     return { ok: false, message: `Limite de ${DEMO_RULES.maxRenovacoes} renovações atingido.` };
   const hasQueue = db.reservations.some(
@@ -84,8 +87,15 @@ export function canLend(db: Database, usuarioId: string, book: Book) {
 
 export function canDeleteBook(db: Database, livroId: string) {
   if (db.loans.some((l) => l.livroId === livroId))
-    return { ok: false, message: "Livro possui empréstimos registrados (integridade referencial)." };
-  if (db.reservations.some((r) => r.livroId === livroId && (r.status === "PENDENTE" || r.status === "DISPONIVEL")))
+    return {
+      ok: false,
+      message: "Livro possui empréstimos registrados (integridade referencial).",
+    };
+  if (
+    db.reservations.some(
+      (r) => r.livroId === livroId && (r.status === "PENDENTE" || r.status === "DISPONIVEL"),
+    )
+  )
     return { ok: false, message: "Livro possui reservas ativas." };
   return { ok: true, message: "Exclusão permitida." };
 }

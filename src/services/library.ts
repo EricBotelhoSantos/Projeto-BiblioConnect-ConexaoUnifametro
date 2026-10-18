@@ -79,10 +79,12 @@ export function useCurrentUser(): User | null {
 }
 
 const today = () => toISODate(new Date());
-const uid = (p: string) => `${p}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+const uid = (p: string) =>
+  `${p}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 const ok = (message: string): Result => ({ ok: true, message });
 const fail = (message: string): Result => ({ ok: false, message });
-const titleOf = (db: Database, livroId: string) => db.books.find((b) => b.id === livroId)?.titulo ?? "Livro";
+const titleOf = (db: Database, livroId: string) =>
+  db.books.find((b) => b.id === livroId)?.titulo ?? "Livro";
 function log(db: Database, usuarioId: string, tipo: Activity["tipo"], texto: string): Activity[] {
   return [{ id: uid("ac"), usuarioId, tipo, texto, em: today() }, ...db.activities];
 }
@@ -138,11 +140,19 @@ export function reserveBook(usuarioId: string, livroId: string): Result {
 export function cancelReservation(reservaId: string): Result {
   const db = state.db;
   const r = db.reservations.find((x) => x.id === reservaId);
-  if (!r || (r.status !== "PENDENTE" && r.status !== "DISPONIVEL")) return fail("Reserva não pode ser cancelada.");
+  if (!r || (r.status !== "PENDENTE" && r.status !== "DISPONIVEL"))
+    return fail("Reserva não pode ser cancelada.");
   commit({
     ...db,
-    reservations: db.reservations.map((x) => (x.id === reservaId ? { ...x, status: "CANCELADA" } : x)),
-    activities: log(db, r.usuarioId, "CANCELAMENTO", `Reserva cancelada: ${titleOf(db, r.livroId)}`),
+    reservations: db.reservations.map((x) =>
+      x.id === reservaId ? { ...x, status: "CANCELADA" } : x,
+    ),
+    activities: log(
+      db,
+      r.usuarioId,
+      "CANCELAMENTO",
+      `Reserva cancelada: ${titleOf(db, r.livroId)}`,
+    ),
   });
   return ok("Reserva cancelada.");
 }
@@ -159,12 +169,23 @@ export function renewLoan(loanId: string): Result {
     loans: db.loans.map((l) =>
       l.id === loanId ? { ...l, dataDevolucaoPrevista: nova, renovacoes: l.renovacoes + 1 } : l,
     ),
-    activities: log(db, loan.usuarioId, "RENOVACAO", `Renovação aprovada: ${titleOf(db, loan.livroId)}`),
+    activities: log(
+      db,
+      loan.usuarioId,
+      "RENOVACAO",
+      `Renovação aprovada: ${titleOf(db, loan.livroId)}`,
+    ),
   });
   return ok(`Renovação aprovada. Nova data de devolução: ${nova.split("-").reverse().join("/")}.`);
 }
 
-export function bookRoom(usuarioId: string, salaId: string, data: string, inicio: number, fim: number): Result {
+export function bookRoom(
+  usuarioId: string,
+  salaId: string,
+  data: string,
+  inicio: number,
+  fim: number,
+): Result {
   const db = state.db;
   const sala = db.rooms.find((r) => r.id === salaId);
   if (!sala) return fail("Espaço não encontrado.");
@@ -176,7 +197,15 @@ export function bookRoom(usuarioId: string, salaId: string, data: string, inicio
   commit({
     ...db,
     bookings: [
-      { id: uid("g"), usuarioId, salaId, data, horaInicio: inicio, horaFim: fim, status: "CONFIRMADO" },
+      {
+        id: uid("g"),
+        usuarioId,
+        salaId,
+        data,
+        horaInicio: inicio,
+        horaFim: fim,
+        status: "CONFIRMADO",
+      },
       ...db.bookings,
     ],
     activities: log(db, usuarioId, "AGENDAMENTO", `Agendamento confirmado: ${sala.nome}`),
@@ -192,7 +221,12 @@ export function cancelBooking(id: string): Result {
   commit({
     ...db,
     bookings: db.bookings.map((x) => (x.id === id ? { ...x, status: "CANCELADO" } : x)),
-    activities: log(db, b.usuarioId, "CANCELAMENTO", `Agendamento cancelado: ${sala?.nome ?? "Espaço"}`),
+    activities: log(
+      db,
+      b.usuarioId,
+      "CANCELAMENTO",
+      `Agendamento cancelado: ${sala?.nome ?? "Espaço"}`,
+    ),
   });
   return ok("Agendamento cancelado.");
 }
@@ -207,7 +241,10 @@ export function saveBook(data: Omit<Book, "id"> & { id?: string }): Result {
     const emprestados = db.loans.filter((l) => l.livroId === data.id && !l.dataDevolucao).length;
     if (data.exemplares < emprestados)
       return fail(`Há ${emprestados} exemplar(es) emprestado(s); a quantidade não pode ser menor.`);
-    commit({ ...db, books: db.books.map((b) => (b.id === data.id ? ({ ...b, ...data } as Book) : b)) });
+    commit({
+      ...db,
+      books: db.books.map((b) => (b.id === data.id ? ({ ...b, ...data } as Book) : b)),
+    });
     return ok("Livro atualizado.");
   }
   commit({ ...db, books: [{ ...data, id: uid("b") } as Book, ...db.books] });
@@ -226,7 +263,10 @@ export function saveAuthor(a: Omit<Author, "id"> & { id?: string }): Result {
   const db = state.db;
   if (!a.nome.trim()) return fail("Informe o nome do autor.");
   if (a.id) {
-    commit({ ...db, authors: db.authors.map((x) => (x.id === a.id ? ({ ...x, ...a } as Author) : x)) });
+    commit({
+      ...db,
+      authors: db.authors.map((x) => (x.id === a.id ? ({ ...x, ...a } as Author) : x)),
+    });
     return ok("Autor atualizado.");
   }
   commit({ ...db, authors: [...db.authors, { ...a, id: uid("au") } as Author] });
@@ -260,12 +300,21 @@ export function registerLoan(usuarioId: string, livroId: string): Result {
   commit({
     ...db,
     loans: [
-      { id: uid("l"), usuarioId, livroId, dataRetirada: t, dataDevolucaoPrevista: addDays(t, DEMO_RULES.prazoEmprestimoDias), renovacoes: 0 },
+      {
+        id: uid("l"),
+        usuarioId,
+        livroId,
+        dataRetirada: t,
+        dataDevolucaoPrevista: addDays(t, DEMO_RULES.prazoEmprestimoDias),
+        renovacoes: 0,
+      },
       ...db.loans,
     ],
     // reserva "disponível" do próprio usuário é concluída ao retirar
     reservations: db.reservations.map((r) =>
-      r.usuarioId === usuarioId && r.livroId === livroId && (r.status === "DISPONIVEL" || r.status === "PENDENTE")
+      r.usuarioId === usuarioId &&
+      r.livroId === livroId &&
+      (r.status === "DISPONIVEL" || r.status === "PENDENTE")
         ? { ...r, status: "CONCLUIDA" }
         : r,
     ),
@@ -283,23 +332,41 @@ export function registerReturn(loanId: string): Result {
   const next = [...db.reservations]
     .filter((r) => r.livroId === loan.livroId && r.status === "PENDENTE")
     .sort((a, b) => a.criadaEm.localeCompare(b.criadaEm))[0];
-  if (next) reservations = reservations.map((r) => (r.id === next.id ? { ...r, status: "DISPONIVEL" } : r));
+  if (next)
+    reservations = reservations.map((r) => (r.id === next.id ? { ...r, status: "DISPONIVEL" } : r));
   commit({
     ...db,
     loans: db.loans.map((l) => (l.id === loanId ? { ...l, dataDevolucao: today() } : l)),
     reservations,
-    activities: log(db, loan.usuarioId, "DEVOLUCAO", `Livro devolvido: ${titleOf(db, loan.livroId)}`),
+    activities: log(
+      db,
+      loan.usuarioId,
+      "DEVOLUCAO",
+      `Livro devolvido: ${titleOf(db, loan.livroId)}`,
+    ),
   });
-  return ok(next ? "Devolução registrada. A próxima reserva da fila foi liberada." : "Devolução registrada.");
+  return ok(
+    next
+      ? "Devolução registrada. A próxima reserva da fila foi liberada."
+      : "Devolução registrada.",
+  );
 }
 
 export function confirmReservation(id: string): Result {
   const db = state.db;
   const r = db.reservations.find((x) => x.id === id);
-  if (!r || r.status !== "PENDENTE") return fail("Apenas reservas pendentes podem ser confirmadas.");
+  if (!r || r.status !== "PENDENTE")
+    return fail("Apenas reservas pendentes podem ser confirmadas.");
   const book = db.books.find((b) => b.id === r.livroId);
-  if (!book || availableCopies(db, book) <= db.reservations.filter((x) => x.livroId === r.livroId && x.status === "DISPONIVEL").length)
+  if (
+    !book ||
+    availableCopies(db, book) <=
+      db.reservations.filter((x) => x.livroId === r.livroId && x.status === "DISPONIVEL").length
+  )
     return fail("Ainda não há exemplar disponível para esta reserva.");
-  commit({ ...db, reservations: db.reservations.map((x) => (x.id === id ? { ...x, status: "DISPONIVEL" } : x)) });
+  commit({
+    ...db,
+    reservations: db.reservations.map((x) => (x.id === id ? { ...x, status: "DISPONIVEL" } : x)),
+  });
   return ok("Reserva liberada para retirada.");
 }
